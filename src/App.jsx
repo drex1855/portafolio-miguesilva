@@ -216,7 +216,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="site-footer"><span>M<span className="footer-period">.</span> SILVA</span><span>Desarrollador Full Stack</span><span>© {new Date().getFullYear()}</span></footer>
+      <footer className="site-footer"><span>M<span className="footer-period">.</span> SILVA</span><span>Desarrollador Full Stack</span><span>© {new Date().getFullYear()} Miguel Ángel Silva Mejía</span></footer>
     </>
   );
 }
