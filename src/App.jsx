@@ -208,6 +208,14 @@ function App() {
               >
                 LinkedIn <span aria-hidden="true">↗</span>
               </a>
+              <a
+                className="btn btn-secondary"
+                href="https://github.com/drex1855"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub <span aria-hidden="true">↗</span>
+              </a>
               <button className="btn btn-secondary" type="button" onClick={downloadCv}>
                 Descargar CV <span aria-hidden="true">↓</span>
               </button>
