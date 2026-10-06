@@ -960,7 +960,18 @@ footer {
 
 /* Responsive */
 @media (max-width: 768px) {
+    /* Padding lateral más compacto en móvil: da más aire al contenido y
+       permite que el reCAPTCHA (304px) quepa sin desbordar la columna. */
+    .container {
+        padding: 0 1.25rem;
+    }
+    .navbar,
+    .navbar.scrolled {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
     .hero {
+        position: relative;
         min-height: auto;
         padding-top: 8rem;
         padding-bottom: 7rem;
@@ -990,6 +1001,12 @@ footer {
     .contact-layout {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+    /* En móvil el desplazamiento negativo del desktop (-212px) saca el
+       formulario de pantalla; se restablece el margen solo en móvil. */
+    .contact-layout {
+        margin: 0;
+        max-width: 100%;
     }
     .contact-methods {
         grid-template-columns: 1fr;
@@ -1040,7 +1057,7 @@ footer {
         display: flex;
         flex-direction: column;
         gap: 0;
-        padding: 0.5rem 2rem 1rem;
+        padding: 0.5rem 1.25rem 1rem;
         background: rgba(9, 11, 13, 0.97);
         border-bottom: 1px solid var(--border-color);
     }
