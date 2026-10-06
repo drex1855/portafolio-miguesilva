@@ -1,5 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import emailjs from '@emailjs/browser';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { downloadCv } from './generateCvPdf.js';
+
+const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const RECAPTCHA_SITE_KEY  = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const navigation = [
   { label: 'Perfil', href: '#about' },
@@ -27,6 +34,35 @@ const skillGroups = [
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const formRef = useRef(null);
+  const recaptchaRef = useRef(null);
+  const [formData, setFormData] = useState({ from_name: '', from_email: '', message: '' });
+  const [formStatus, setFormStatus] = useState('idle'); // idle | sending | success | error
+  const [captchaToken, setCaptchaToken] = useState(null);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCaptcha = (token) => {
+    setCaptchaToken(token);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!captchaToken) return;
+    
+    setFormStatus('sending');
+    emailjs
+      .sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, formRef.current, { publicKey: EMAILJS_PUBLIC_KEY })
+      .then(() => {
+        setFormStatus('success');
+        setFormData({ from_name: '', from_email: '', message: '' });
+        setCaptchaToken(null);
+        recaptchaRef.current?.reset();
+      })
+      .catch(() => setFormStatus('error'));
+  };
 
   useEffect(() => {
     const updateNavbar = () => setIsScrolled(window.scrollY > 24);
@@ -172,45 +208,117 @@ function App() {
 
         <section className="section contact-section" id="contact">
           <p className="section-kicker">04 / Contacto</p>
-          <div className="contact-card">
-            <p className="contact-overline">¿Tienes un proyecto en mente?</p>
-            <h2 className="section-heading">Hagamos que <span>suceda.</span></h2>
-            <p className="contact-description">Estoy disponible para conversar sobre nuevas oportunidades y proyectos.</p>
-            <div className="contact-methods">
-              <a className="contact-method" href="mailto:angelsilvamejia@gmail.com">
-                <span className="contact-method-label">Correo electrónico</span>
-                <span className="contact-method-value">angelsilvamejia@gmail.com</span>
-              </a>
-              <a
-                className="contact-method"
-                href="https://wa.me/573012439472?text=Hola%20Miguel%2C%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20conversar."
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span className="contact-method-label">WhatsApp</span>
-                <span className="contact-method-value">+57 301 243 9472 <span aria-hidden="true">↗</span></span>
-              </a>
+          <div className="contact-layout">
+            <div className="contact-form-container">
+              <form ref={formRef} onSubmit={handleSubmit} className="contact-form" noValidate style={{ marginTop: 0 }}>
+                <div className="contact-form-field">
+                  <label htmlFor="from_name">Nombre</label>
+                  <input
+                    id="from_name"
+                    name="from_name"
+                    type="text"
+                    placeholder="Tu nombre"
+                    value={formData.from_name}
+                    onChange={handleChange}
+                    required
+                    disabled={formStatus === 'sending'}
+                  />
+                </div>
+                <div className="contact-form-field">
+                  <label htmlFor="from_email">Email</label>
+                  <input
+                    id="from_email"
+                    name="from_email"
+                    type="email"
+                    placeholder="tucorreo@ejemplo.com"
+                    value={formData.from_email}
+                    onChange={handleChange}
+                    required
+                    disabled={formStatus === 'sending'}
+                  />
+                </div>
+                <div className="contact-form-field">
+                  <label htmlFor="message">Mensaje</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Cuéntame sobre tu proyecto..."
+                    rows={5}
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    disabled={formStatus === 'sending'}
+                  />
+                </div>
+                <div className="contact-form-field">
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={RECAPTCHA_SITE_KEY}
+                    onChange={handleCaptcha}
+                    theme="dark"
+                  />
+                </div>
+
+                {formStatus === 'success' && (
+                  <p className="form-feedback form-feedback--success">
+                    ✓ ¡Mensaje enviado! Te responderé pronto.
+                  </p>
+                )}
+                {formStatus === 'error' && (
+                  <p className="form-feedback form-feedback--error">
+                    ✗ Ocurrió un error. Intenta de nuevo o escríbeme por WhatsApp.
+                  </p>
+                )}
+
+                <button
+                  className="btn btn-primary contact-form-submit"
+                  type="submit"
+                  disabled={formStatus === 'sending' || !captchaToken}
+                >
+                  {formStatus === 'sending' ? 'Enviando...' : <>Enviar mensaje <span aria-hidden="true">↗</span></>}
+                </button>
+              </form>
             </div>
-            <div className="contact-actions">
-              <a
-                className="btn btn-primary"
-                href="https://wa.me/573012439472?text=Hola%20Miguel%2C%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20conversar."
-                target="_blank"
-                rel="noreferrer"
-              >
-                Escribir por WhatsApp <span aria-hidden="true">↗</span>
-              </a>
-              <a
-                className="btn btn-secondary"
-                href="https://linkedin.com/in/miguel-angel-silva-mejia-623663259"
-                target="_blank"
-                rel="noreferrer"
-              >
-                LinkedIn <span aria-hidden="true">↗</span>
-              </a>
-              <button className="btn btn-secondary" type="button" onClick={downloadCv}>
-                Descargar CV <span aria-hidden="true">↓</span>
-              </button>
+
+            <div className="contact-info">
+              <p className="contact-overline">¿Tienes un proyecto en mente?</p>
+              <h2 className="section-heading">Hagamos que <span>suceda.</span></h2>
+              <p className="contact-description">
+                Si tienes un proyecto en mente, una oportunidad laboral o solo quieres saludar, no dudes en escribirme.
+              </p>
+              
+              <div className="contact-actions" style={{ flexDirection: 'column', alignItems: 'flex-start', marginTop: '2rem' }}>
+                <a
+                  className="btn btn-secondary"
+                  href="https://wa.me/573012439472?text=Hola%20Miguel%2C%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20conversar."
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  WhatsApp <span aria-hidden="true">↗</span>
+                </a>
+                <a
+                  className="btn btn-secondary"
+                  href="https://linkedin.com/in/miguel-angel-silva-mejia-623663259"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  LinkedIn <span aria-hidden="true">↗</span>
+                </a>
+                <a
+                  className="btn btn-secondary"
+                  href="https://github.com/drex1855"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
+                  GitHub <span aria-hidden="true">↗</span>
+                </a>
+                <button className="btn btn-secondary" type="button" onClick={downloadCv} style={{ width: '100%', justifyContent: 'center' }}>
+                  Descargar CV <span aria-hidden="true">↓</span>
+                </button>
+              </div>
             </div>
           </div>
         </section>

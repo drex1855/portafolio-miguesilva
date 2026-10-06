@@ -925,15 +925,20 @@ h1, h2, h3, h4 {
     padding-bottom: 8rem;
 }
 
-.contact-card {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
+.contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: start;
+    text-align: left;
+    max-width: 1000px;
+    margin: 0px 0px 0px -212px;
 }
 
-.contact-card p {
+.contact-layout p {
     color: var(--text-secondary);
     margin-bottom: 2rem;
+    text-align: left;
 }
 
 .contact-links {
@@ -981,9 +986,10 @@ footer {
         white-space: nowrap;
     }
     .about-section,
-    .contact-section {
+    .contact-section,
+    .contact-layout {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 2rem;
     }
     .contact-methods {
         grid-template-columns: 1fr;
@@ -1107,4 +1113,90 @@ footer {
         transition-duration: 0.01ms !important;
     }
 
+}
+
+/* ── Contact Form ── */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 2rem;
+}
+
+.contact-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.contact-form-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.contact-form-field input,
+.contact-form-field textarea {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s, background 0.2s;
+    resize: none;
+    outline: none;
+    width: 100%;
+}
+
+.contact-form-field input::placeholder,
+.contact-form-field textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.contact-form-field input:focus,
+.contact-form-field textarea:focus {
+    border-color: var(--accent-primary);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.contact-form-field input:disabled,
+.contact-form-field textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.contact-form-submit {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.25rem;
+}
+
+.contact-form-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-feedback {
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    margin-top: -0.25rem;
+}
+
+.form-feedback--success {
+    background: rgba(169, 223, 198, 0.12);
+    border: 1px solid rgba(169, 223, 198, 0.3);
+    color: var(--accent-secondary);
+}
+
+.form-feedback--error {
+    background: rgba(255, 121, 91, 0.1);
+    border: 1px solid rgba(255, 121, 91, 0.3);
+    color: var(--accent-primary);
 }
