@@ -948,7 +948,7 @@ h1, h2, h3, h4 {
     flex-wrap: wrap;
 }
 
-/* Footer */
+
 footer {
     text-align: center;
     padding: 2rem;
@@ -958,10 +958,9 @@ footer {
     font-family: 'DM Mono', monospace;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
-    /* Padding lateral más compacto en móvil: da más aire al contenido y
-       permite que el reCAPTCHA (304px) quepa sin desbordar la columna. */
+    
     .container {
         padding: 0 1.25rem;
     }
@@ -1002,8 +1001,7 @@ footer {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
-    /* En móvil el desplazamiento negativo del desktop (-212px) saca el
-       formulario de pantalla; se restablece el margen solo en móvil. */
+    
     .contact-layout {
         margin: 0;
         max-width: 100%;
@@ -1132,7 +1130,7 @@ footer {
 
 }
 
-/* ── Contact Form ── */
+
 .contact-form {
     display: flex;
     flex-direction: column;

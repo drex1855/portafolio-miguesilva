@@ -6,7 +6,7 @@ import { downloadCv } from './generateCvPdf.js';
 const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-const RECAPTCHA_SITE_KEY  = '6LcyBuEtAAAAALt9cffkh4lz17u3KUm4JO--qCEL';
+const RECAPTCHA_SITE_KEY  = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const navigation = [
   { label: 'Perfil', href: '#about' },
@@ -320,6 +320,7 @@ function App() {
                 </button>
               </div>
             </div>
+           
           </div>
         </section>
       </main>
